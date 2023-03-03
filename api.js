@@ -57,6 +57,7 @@ fetch('https://api.datos.gob.mx/v1/inai.solicitudes')
         }
     });
     console.log("********************************************************************************************************************");
+    //DEPENDENCIA CON MÁS SOLICITUDES A NIVEL NACIONAL
     let masSolicitudes = '';
     let cantidadMasSolicitudes = 0;
     for (const key in solicitudes) {
@@ -65,7 +66,32 @@ fetch('https://api.datos.gob.mx/v1/inai.solicitudes')
             masSolicitudes = key;
         }
     }
-    console.log(`La dependencia con más solicitudes es ${masSolicitudes} con: ${cantidadMasSolicitudes} solicitudes`);
+    console.log(`La dependencia con más solicitudes a nivel nacional es ${masSolicitudes} con: ${cantidadMasSolicitudes} solicitudes`);
+    console.log("********************************************************************************************************************");
+    //DEPENDENCIAS CON MÁS SOLICITUDES A NIVEL ESTATAL
+    console.log('Dependencia con más solicitudes a nivel estatal')
+    for (const key in totalDaysEstatales) {
+        let solicitudesEstatales = {};
+        let masSolicitudesEstatal = '';
+        let cantidadMasSolicitudesEstatal = 0;
+        jsonRsponse.results.forEach(obj => {
+            if(obj.ESTADO === key){
+                if(solicitudesEstatales[obj.DEPENDENCIA]){
+                    solicitudesEstatales[obj.DEPENDENCIA]+=1;
+                }
+                else{
+                    solicitudesEstatales[obj.DEPENDENCIA]=1;
+                }
+            }
+        });
+        for (const keyDep in solicitudesEstatales) {
+            if(solicitudesEstatales[keyDep]>cantidadMasSolicitudesEstatal){
+                cantidadMasSolicitudesEstatal = solicitudesEstatales[keyDep];
+                masSolicitudesEstatal = keyDep;
+            }
+        }
+        console.log(`\n Estado: ${key} dependencia: ${masSolicitudesEstatal} no. solicitudes: ${cantidadMasSolicitudesEstatal}`);
+    }
     //TIEMPO DE RESPUESTA NACIONAL
     console.log("********************************************************************************************************************");
     console.log("A nivel Nacional");
@@ -81,5 +107,5 @@ fetch('https://api.datos.gob.mx/v1/inai.solicitudes')
     let menosDiasPorMedio = Object.entries(diasPorMedio).reduce(function(prev, curr){
         return prev[1] < curr[1] ? prev : curr;
     });
-    console.log(`El medio de entrega con menos tiempo de de resolución es: ${menosDiasPorMedio[0]}`);
+    console.log(`El medio de entrega con menos tiempo de resolución es: ${menosDiasPorMedio[0]}`);
   });
